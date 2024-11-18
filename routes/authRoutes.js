@@ -7,9 +7,11 @@ router.get('/auth/google', passport.authenticate('google', {
 }));
 
 router.get('/auth/google/callback', passport.authenticate('google', {
-    successRedirect: process.env.CLIENT_URL,
-    failureRedirect: '/login/failed' 
-}));
+    failureRedirect: '/login/failed',
+}), (req, res) => {
+    res.redirect(process.env.CLIENT_URL + '/dashboard'); // Explicitly redirect to the dashboard
+});
+
 
 router.get('/login/failed', (req, res) =>{
     res.status(401).json({
@@ -18,15 +20,16 @@ router.get('/login/failed', (req, res) =>{
     });
 });
 
-router.get('/login/success', (req, res) =>{
-    if(req.user){
+router.get('/login/success', (req, res) => {
+    console.log('User session:', req.user);
+    if (req.user) {
         res.status(200).json({
             error: false,
             message: "Successfully Logged in",
-            user: req.user
+            user: req.user,
         });
-    }else{
-        res.status(401).json({ error: true,message: "Not Authorized" });
+    } else {
+        res.status(401).json({ error: true, message: "Not Authorized" });
     }
 });
 
