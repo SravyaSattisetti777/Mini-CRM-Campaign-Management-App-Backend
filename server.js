@@ -24,13 +24,19 @@ const app = express();
 app.use(express.json());
 app.use(bodyParser.json()); 
 
-app.use(session({
-  secret: "secret",
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false, sameSite: "lax" },
-})
+app.set('trust proxy', 1);
+app.use(
+    session({
+        secret: 'secret',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            secure: true, // Use HTTPS
+            sameSite: 'none', // Cross-domain cookies
+        },
+    })
 );
+
 
 app.use(
   cors({
