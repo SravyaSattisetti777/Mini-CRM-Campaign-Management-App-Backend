@@ -38,19 +38,12 @@ exports.getOrderById = async (req, res) => {
     try {
         const { id } = req.params;
         const userId = req.user.id;
-
         const order = await Order.findOne({ _id: id, userId }).populate("customerId", "name email");
-        if (!order) {
-            return res.status(404).json({ error: "Order not found" });
-        }
-
         res.status(200).json(order);
     } catch (error) {
-        console.error("Error fetching order details:", error);
-        res.status(500).json({ error: "Failed to fetch order details" });
+        res.status(500).json({ error: "Failed to fetch order" });
     }
 };
-
 
 exports.updateOrder = async (req, res) => {
     try {
